@@ -27,8 +27,8 @@
 #include <linux/mutex.h>		/* mutexes */
 #include <linux/ioctl.h>
 
-#include <asm/uaccess.h>		/* copy_*_user */
-
+//#include <asm/uaccess.h>		/* copy_*_user */
+#include <linux/uaccess.h>
 #define DEBUG_LEVEL_DEBUG		0x1F
 #define DEBUG_LEVEL_INFO		0x0F
 #define DEBUG_LEVEL_WARN		0x07
@@ -85,9 +85,9 @@
 #define ML_CTRL_VALUE		0x0
 #define ML_CTRL_INDEX		0x0
 
-#define ML_STOP			0x00
-#define ML_UP			0x01
-#define ML_DOWN			0x02
+#define ML_STOP			0x20
+#define ML_UP			0x02
+#define ML_DOWN			0x01
 // #if MISSILE_LAUNCHER == ML_THUNDER
 // #define ML_LED			0x03
 // #endif
@@ -107,7 +107,7 @@
 //#ifdef CONFIG_USB_DYNAMIC_MINORS
 #define ML_MINOR_BASE	0
 //#else
-//#define ML_MINOR_BASE	96
+// #define ML_MINOR_BASE	96
 //#endif
 
 struct usb_ml {
@@ -134,8 +134,9 @@ struct usb_ml {
 };
 
 
-static struct usb_device_id ml_table [] = {
+static const struct usb_device_id ml_table [] = {
 	{ USB_DEVICE(ML_VENDOR_ID, ML_PRODUCT_ID) },
+	//{ USB_DEVICE_INFO(0x03,0x00,0x00) },
 	{ }
 };
 
@@ -144,8 +145,8 @@ MODULE_DEVICE_TABLE (usb, ml_table);
 
 static int debug_level = DEBUG_LEVEL_INFO;
 static int debug_trace = 0;
-module_param(debug_level, int, S_IRUGO | S_IWUSR);
-module_param(debug_trace, int, S_IRUGO | S_IWUSR);
+//module_param(debug_level, int, S_IRUGO | S_IWUSR);
+//module_param(debug_trace, int, S_IRUGO | S_IWUSR);
 //MODULE_PARM_DESC(debug_level, "debug level (bitmask)");
 //MODULE_PARM_DESC(debug_trace, "enable function tracing");
 
@@ -286,6 +287,9 @@ resubmit:
 }
 
 
+
+
+
 static int ml_open(struct inode *inode, struct file *file)
 {
 	struct usb_ml *dev = NULL;
@@ -338,7 +342,7 @@ static int ml_open(struct inode *inode, struct file *file)
 
 	retval = usb_submit_urb(dev->int_in_urb, GFP_KERNEL);
 	if (retval) {
-		DBG_ERR("submitting int urb failed (%d)", retval);
+		printk("submitting int urb failed (%d)", retval);
 		dev->int_in_running = 0;
 		--dev->open_count;
 		goto unlock_exit;
@@ -376,20 +380,20 @@ static int ml_release(struct inode *inode, struct file *file)
 	}
 
 	if (dev->open_count <= 0) {
-		DBG_ERR("device not opened");
+		printk("device not opened");
 		retval = -ENODEV;
 		goto unlock_exit;
 	}
 
 	if (! dev->udev) {
-		DBG_DEBUG("device unplugged before the file was released");
+		printk("device unplugged before the file was released");
 		up (&dev->sem);	/* Unlock here as ml_delete frees dev. */
 		ml_delete(dev);
 		goto exit;
 	}
 
 	if (dev->open_count > 1)
-		DBG_DEBUG("open_count = %d", dev->open_count);
+		printk("open_count = %d", dev->open_count);
 
 	ml_abort_transfers(dev);
 	--dev->open_count;
@@ -401,6 +405,16 @@ exit:
 	return retval;
 }
 
+
+
+
+static long int ml_read(struct file *file , char __user *user_buf, size_t count, loff_t *ppos){
+	printk("fuck read!!");
+	return 0;
+}
+
+
+
 static ssize_t ml_write(struct file *file, const char __user *user_buf, size_t
 		count, loff_t *ppos)
 {
@@ -410,7 +424,14 @@ static ssize_t ml_write(struct file *file, const char __user *user_buf, size_t
 // #if MISSILE_LAUNCHER == ML_THUNDER
 // 	static int ml_led = 1;
 // #endif
-	u8 buf[8];
+
+
+	void *modem_status;
+	modem_status= kmalloc(sizeof(char)*8, GFP_KERNEL);
+    if (!modem_status)
+        return -ENOMEM;
+
+	
 	__u8 cmd = ML_STOP;
 
 	printk("Send command");
@@ -441,7 +462,7 @@ static ssize_t ml_write(struct file *file, const char __user *user_buf, size_t
 		retval = -EFAULT;
 		goto unlock_exit;
 	}
-
+	printk("cmd is 0x%02x",cmd);
 	policy = (cmd == ML_STOP || cmd == ML_UP || cmd == ML_DOWN
 		  || cmd == ML_LEFT || cmd == ML_RIGHT || cmd == ML_UP_LEFT
 		  || cmd == ML_DOWN_LEFT || cmd == ML_UP_RIGHT
@@ -450,24 +471,29 @@ static ssize_t ml_write(struct file *file, const char __user *user_buf, size_t
 // 	policy = policy || (cmd == ML_LED);
 // #endif
 	if (!policy) {
-		DBG_ERR("illegal command issued");
+		printk("illegal command issued");
 		retval = -0x2a;		/* scnr */
 		goto unlock_exit;
 	}
 
-	memset(&buf, 0, sizeof(buf));
+	memset(modem_status, 0, sizeof(char)*8);
 // #if MISSILE_LAUNCHER == ML_THUNDER
 // 	if (cmd == ML_LED) {
 // 		buf[0] = ML_LED;
 // 		buf[1] = ml_led;
 // 		ml_led = 1 - ml_led;
 // 	} else {
-// 		buf[0] = 0x02;
+	char buff[8];
+	memset(buff,0,8);
+	buff[0]=0x02;buff[1]=cmd;
+	strncpy( modem_status, buff, 8);
+	// modem_status = buff;
 // 		buf[1] = cmd;
 // 	}
 // #else
-	buf[0] = 0x02;
-	buf[1] = cmd;
+	// buf[1] = cmd;
+	// memset(&buf[1], 0, ML_CTRL_BUFFER_SIZE - 1);
+	
 // #endif
 	/* The interrupt-in-endpoint handler also modifies dev->command. */
 	spin_lock(&dev->cmd_spinlock);
@@ -480,8 +506,11 @@ static ssize_t ml_write(struct file *file, const char __user *user_buf, size_t
 			ML_CTRL_REQUEST_TYPE,
 			ML_CTRL_VALUE,
 			ML_CTRL_INDEX,
-			&buf,
-			sizeof(buf),
+			// &buf,
+			modem_status,
+			1,
+			// USB_CTRL_SET_TIMEOUT);
+			// 2000);
 			HZ*5);
 
 	if (retval < 0) {
@@ -496,6 +525,7 @@ unlock_exit:
 	up(&dev->sem);
 
 exit:
+	kfree(modem_status);
 	return retval;
 }
 
@@ -505,24 +535,34 @@ static struct file_operations ml_fops = {
 	.write =	ml_write,
 	.open =		ml_open,
 	.release =	ml_release,
+	// .read = ml_read,
 };
 
 static struct usb_class_driver ml_class = {
 	//.name = "ml%d",
-	.name = "ml099",
+	.name = "ml%d",
 	.fops = &ml_fops,
 	.minor_base = 0,//ML_MINOR_BASE,
 };
 
 static int ml_probe(struct usb_interface *interface,
-		    const struct usb_device_id *id)
-{
-	struct usb_device *udev = interface_to_usbdev(interface);
-	struct usb_ml *dev = NULL;
+		    const struct usb_device_id *id){	
+	// printk("fuck probe!!");
+	// return 0;
+	// dev_info(&interface->dev, "USB Driver Probed: Vendor ID : 0x%02x,\t"
+    //          "Product ID : 0x%02x\n", id->idVendor, id->idProduct);
+	// return 0;
+	//printk("fuck!!");
+	struct usb_device *udev; 
+	
+	struct usb_ml *dev;
+	
 	struct usb_host_interface *iface_desc;
 	struct usb_endpoint_descriptor *endpoint;
 	int i, int_end_size;
 	int retval = -ENODEV;
+	udev= interface_to_usbdev(interface);
+	dev = NULL;
 	printk("Probe missile launcher");
 
 	if (! udev) {
@@ -633,7 +673,7 @@ static int ml_probe(struct usb_interface *interface,
 
 	dev->minor = interface->minor;
 
-	printk("USB missile launcher now attached to /dev/ml099",
+	printk("USB missile launcher now attached to /dev/ml%d",
 			interface->minor - ML_MINOR_BASE);
 
 exit:
@@ -672,15 +712,16 @@ static void ml_disconnect(struct usb_interface *interface)
 
 	mutex_unlock(&disconnect_mutex);
 
-	printk("USB missile launcher /dev/ml099 now disconnected",
+	printk("USB missile launcher /dev/ml%d now disconnected",
 			minor - ML_MINOR_BASE);
 }
 
 static struct usb_driver ml_driver = {
-	.name = "missile_launcher",
-	.id_table = ml_table,
+	.name = "ml_driver",
+	//.id_table = ml_table,
 	.probe = ml_probe,
 	.disconnect = ml_disconnect,
+	.id_table = ml_table,
 };
 
 

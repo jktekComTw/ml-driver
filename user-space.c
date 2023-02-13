@@ -1,14 +1,15 @@
 #include <fcntl.h>
 #include <stdio.h>
+
 #include <stdlib.h>
 #include <unistd.h>
 
 #define DEFAULT_DEVICE		"/dev/ml0"
 #define DEFAULT_DURATION	800
 
-#define ML_STOP         0x00
-#define ML_UP           0x01
-#define ML_DOWN         0x02
+#define ML_STOP         0x20
+#define ML_UP           0x02
+#define ML_DOWN         0x01
 #define ML_LED          0x03
 #define ML_LEFT         0x04
 #define ML_RIGHT        0x08
@@ -21,8 +22,12 @@ void send_cmd(int fd, int cmd)
 	int retval = 0;
 
 	retval = write(fd, &cmd, 1);
-	if (retval < 0)
+	if (retval < 0){
+		fflush("/dev/ml0");
+		// printf("the fsync rst is %d\n",ret);
 		fprintf(stderr, "could not send command to fd=%d\n", fd);
+	}
+		
 }
 
 static void usage(char *name)
@@ -97,6 +102,7 @@ int main(int argc, char *argv[])
 	}
 
 	printf("Send command %i\n", cmd);
+	printf("command hex is 0x%2x\n", cmd);
 	send_cmd(fd, cmd);
 
 	if (cmd & ML_FIRE) 

@@ -1,1 +1,1 @@
-cmd_/home/pi/ml-driver/ml_driver.mod := { echo  /home/pi/ml-driver/ml_driver.o;  echo; } > /home/pi/ml-driver/ml_driver.mod
+cmd_/home/wandog/workspace/ml-driver/ml_driver.mod := { echo  /home/wandog/workspace/ml-driver/ml_driver.o;  echo; } > /home/wandog/workspace/ml-driver/ml_driver.mod

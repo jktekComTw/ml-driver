@@ -1,1 +1,1 @@
-cmd_/home/pi/ml-driver/ml_driver.ko := ld -r  -EL  --build-id=sha1  -T scripts/module.lds -o /home/pi/ml-driver/ml_driver.ko /home/pi/ml-driver/ml_driver.o /home/pi/ml-driver/ml_driver.mod.o;  true
+cmd_/home/wandog/workspace/ml-driver/ml_driver.ko := ld -r -m elf_x86_64  -z max-page-size=0x200000 -z noexecstack   --build-id  -T ./scripts/module-common.lds -o /home/wandog/workspace/ml-driver/ml_driver.ko /home/wandog/workspace/ml-driver/ml_driver.o /home/wandog/workspace/ml-driver/ml_driver.mod.o;  true
