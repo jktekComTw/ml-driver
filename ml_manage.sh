@@ -26,7 +26,7 @@ load()
 {	
 	shift
 
-	rmmod usbhid
+	#rmmod usbhid
 
 	insmod ./${module}.ko $* || exit 1
 
