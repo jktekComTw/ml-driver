@@ -1,3 +1,8 @@
+had modify the driver to let it workable on ubuntu 20.04
+
+as for rasp pi, not test yet.
+==================================================================================
+
 ML-driver
 =========
 
