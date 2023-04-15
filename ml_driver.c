@@ -332,7 +332,7 @@ static int ml_open(struct inode *inode, struct file *file)
 			usb_rcvintpipe(dev->udev,
 				       dev->int_in_endpoint->bEndpointAddress),
 			dev->int_in_buffer,
-			le16_to_cpu(dev->int_in_endpoint->wMaxPacketSize),
+			dev->int_in_endpoint->wMaxPacketSize,
 			ml_int_in_callback,
 			dev,
 			dev->int_in_endpoint->bInterval);
@@ -427,7 +427,7 @@ static ssize_t ml_write(struct file *file, const char __user *user_buf, size_t
 
 
 	void *modem_status;
-	modem_status= kmalloc(sizeof(char)*8, GFP_KERNEL);
+	modem_status= kmalloc(1, GFP_KERNEL);
     if (!modem_status)
         return -ENOMEM;
 
@@ -483,10 +483,10 @@ static ssize_t ml_write(struct file *file, const char __user *user_buf, size_t
 // 		buf[1] = ml_led;
 // 		ml_led = 1 - ml_led;
 // 	} else {
-	char buff[8];
-	memset(buff,0,8);
-	buff[0]=0x02;buff[1]=cmd;
-	strncpy( modem_status, buff, 8);
+	char buff[1];
+	//memset(buff,0,1);
+	buff[0]=cmd;//buff[1]=cmd;
+	strncpy( modem_status, buff, 1);
 	// modem_status = buff;
 // 		buf[1] = cmd;
 // 	}
@@ -508,7 +508,7 @@ static ssize_t ml_write(struct file *file, const char __user *user_buf, size_t
 			ML_CTRL_INDEX,
 			// &buf,
 			modem_status,
-			1,
+			sizeof(modem_status),
 			// USB_CTRL_SET_TIMEOUT);
 			// 2000);
 			HZ*5);
@@ -602,7 +602,7 @@ static int ml_probe(struct usb_interface *interface,
 		goto error;
 	}
 
-	int_end_size = le16_to_cpu(dev->int_in_endpoint->wMaxPacketSize);
+	int_end_size = dev->int_in_endpoint->wMaxPacketSize;
 
 	dev->int_in_buffer = kmalloc(int_end_size, GFP_KERNEL);
 	if (! dev->int_in_buffer) {
@@ -641,9 +641,9 @@ static int ml_probe(struct usb_interface *interface,
 	}
 	dev->ctrl_dr->bRequestType = ML_CTRL_REQUEST_TYPE;
 	dev->ctrl_dr->bRequest = ML_CTRL_REQUEST;
-	dev->ctrl_dr->wValue = cpu_to_le16(ML_CTRL_VALUE);
-	dev->ctrl_dr->wIndex = cpu_to_le16(ML_CTRL_INDEX);
-	dev->ctrl_dr->wLength = cpu_to_le16(ML_CTRL_BUFFER_SIZE);
+	dev->ctrl_dr->wValue = ML_CTRL_VALUE;
+	dev->ctrl_dr->wIndex = ML_CTRL_INDEX;
+	dev->ctrl_dr->wLength = ML_CTRL_BUFFER_SIZE;
 
 	usb_fill_control_urb(dev->ctrl_urb, dev->udev,
 			usb_sndctrlpipe(dev->udev, 0),
