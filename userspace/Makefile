@@ -111,84 +111,44 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named Uspace
+# Target rules for targets named controlHID
 
 # Build rule for target.
-Uspace: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 Uspace
-.PHONY : Uspace
+controlHID: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 controlHID
+.PHONY : controlHID
 
 # fast build rule for target.
-Uspace/fast:
-	$(MAKE) -f CMakeFiles/Uspace.dir/build.make CMakeFiles/Uspace.dir/build
-.PHONY : Uspace/fast
+controlHID/fast:
+	$(MAKE) -f CMakeFiles/controlHID.dir/build.make CMakeFiles/controlHID.dir/build
+.PHONY : controlHID/fast
 
-#=============================================================================
-# Target rules for targets named Twrite
+controlHID.o: controlHID.c.o
 
-# Build rule for target.
-Twrite: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 Twrite
-.PHONY : Twrite
-
-# fast build rule for target.
-Twrite/fast:
-	$(MAKE) -f CMakeFiles/Twrite.dir/build.make CMakeFiles/Twrite.dir/build
-.PHONY : Twrite/fast
-
-Twrite.o: Twrite.c.o
-
-.PHONY : Twrite.o
+.PHONY : controlHID.o
 
 # target to build an object file
-Twrite.c.o:
-	$(MAKE) -f CMakeFiles/Twrite.dir/build.make CMakeFiles/Twrite.dir/Twrite.c.o
-.PHONY : Twrite.c.o
+controlHID.c.o:
+	$(MAKE) -f CMakeFiles/controlHID.dir/build.make CMakeFiles/controlHID.dir/controlHID.c.o
+.PHONY : controlHID.c.o
 
-Twrite.i: Twrite.c.i
+controlHID.i: controlHID.c.i
 
-.PHONY : Twrite.i
-
-# target to preprocess a source file
-Twrite.c.i:
-	$(MAKE) -f CMakeFiles/Twrite.dir/build.make CMakeFiles/Twrite.dir/Twrite.c.i
-.PHONY : Twrite.c.i
-
-Twrite.s: Twrite.c.s
-
-.PHONY : Twrite.s
-
-# target to generate assembly for a file
-Twrite.c.s:
-	$(MAKE) -f CMakeFiles/Twrite.dir/build.make CMakeFiles/Twrite.dir/Twrite.c.s
-.PHONY : Twrite.c.s
-
-Uspace.o: Uspace.c.o
-
-.PHONY : Uspace.o
-
-# target to build an object file
-Uspace.c.o:
-	$(MAKE) -f CMakeFiles/Uspace.dir/build.make CMakeFiles/Uspace.dir/Uspace.c.o
-.PHONY : Uspace.c.o
-
-Uspace.i: Uspace.c.i
-
-.PHONY : Uspace.i
+.PHONY : controlHID.i
 
 # target to preprocess a source file
-Uspace.c.i:
-	$(MAKE) -f CMakeFiles/Uspace.dir/build.make CMakeFiles/Uspace.dir/Uspace.c.i
-.PHONY : Uspace.c.i
+controlHID.c.i:
+	$(MAKE) -f CMakeFiles/controlHID.dir/build.make CMakeFiles/controlHID.dir/controlHID.c.i
+.PHONY : controlHID.c.i
 
-Uspace.s: Uspace.c.s
+controlHID.s: controlHID.c.s
 
-.PHONY : Uspace.s
+.PHONY : controlHID.s
 
 # target to generate assembly for a file
-Uspace.c.s:
-	$(MAKE) -f CMakeFiles/Uspace.dir/build.make CMakeFiles/Uspace.dir/Uspace.c.s
-.PHONY : Uspace.c.s
+controlHID.c.s:
+	$(MAKE) -f CMakeFiles/controlHID.dir/build.make CMakeFiles/controlHID.dir/controlHID.c.s
+.PHONY : controlHID.c.s
 
 # Help Target
 help:
@@ -198,14 +158,10 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... Uspace"
-	@echo "... Twrite"
-	@echo "... Twrite.o"
-	@echo "... Twrite.i"
-	@echo "... Twrite.s"
-	@echo "... Uspace.o"
-	@echo "... Uspace.i"
-	@echo "... Uspace.s"
+	@echo "... controlHID"
+	@echo "... controlHID.o"
+	@echo "... controlHID.i"
+	@echo "... controlHID.s"
 .PHONY : help
 
 

@@ -53,8 +53,7 @@ CMAKE_BINARY_DIR = /home/wandog/workspace/missile_related/ml-driver/userspace
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
-all: CMakeFiles/Uspace.dir/all
-all: CMakeFiles/Twrite.dir/all
+all: CMakeFiles/controlHID.dir/all
 
 .PHONY : all
 
@@ -64,64 +63,36 @@ preinstall:
 .PHONY : preinstall
 
 # The main recursive "clean" target.
-clean: CMakeFiles/Uspace.dir/clean
-clean: CMakeFiles/Twrite.dir/clean
+clean: CMakeFiles/controlHID.dir/clean
 
 .PHONY : clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/Uspace.dir
+# Target rules for target CMakeFiles/controlHID.dir
 
 # All Build rule for target.
-CMakeFiles/Uspace.dir/all:
-	$(MAKE) -f CMakeFiles/Uspace.dir/build.make CMakeFiles/Uspace.dir/depend
-	$(MAKE) -f CMakeFiles/Uspace.dir/build.make CMakeFiles/Uspace.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/wandog/workspace/missile_related/ml-driver/userspace/CMakeFiles --progress-num=3,4 "Built target Uspace"
-.PHONY : CMakeFiles/Uspace.dir/all
+CMakeFiles/controlHID.dir/all:
+	$(MAKE) -f CMakeFiles/controlHID.dir/build.make CMakeFiles/controlHID.dir/depend
+	$(MAKE) -f CMakeFiles/controlHID.dir/build.make CMakeFiles/controlHID.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/wandog/workspace/missile_related/ml-driver/userspace/CMakeFiles --progress-num=1,2 "Built target controlHID"
+.PHONY : CMakeFiles/controlHID.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/Uspace.dir/rule: cmake_check_build_system
+CMakeFiles/controlHID.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/wandog/workspace/missile_related/ml-driver/userspace/CMakeFiles 2
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/Uspace.dir/all
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/controlHID.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/wandog/workspace/missile_related/ml-driver/userspace/CMakeFiles 0
-.PHONY : CMakeFiles/Uspace.dir/rule
+.PHONY : CMakeFiles/controlHID.dir/rule
 
 # Convenience name for target.
-Uspace: CMakeFiles/Uspace.dir/rule
+controlHID: CMakeFiles/controlHID.dir/rule
 
-.PHONY : Uspace
-
-# clean rule for target.
-CMakeFiles/Uspace.dir/clean:
-	$(MAKE) -f CMakeFiles/Uspace.dir/build.make CMakeFiles/Uspace.dir/clean
-.PHONY : CMakeFiles/Uspace.dir/clean
-
-#=============================================================================
-# Target rules for target CMakeFiles/Twrite.dir
-
-# All Build rule for target.
-CMakeFiles/Twrite.dir/all:
-	$(MAKE) -f CMakeFiles/Twrite.dir/build.make CMakeFiles/Twrite.dir/depend
-	$(MAKE) -f CMakeFiles/Twrite.dir/build.make CMakeFiles/Twrite.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/wandog/workspace/missile_related/ml-driver/userspace/CMakeFiles --progress-num=1,2 "Built target Twrite"
-.PHONY : CMakeFiles/Twrite.dir/all
-
-# Build rule for subdir invocation for target.
-CMakeFiles/Twrite.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/wandog/workspace/missile_related/ml-driver/userspace/CMakeFiles 2
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/Twrite.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/wandog/workspace/missile_related/ml-driver/userspace/CMakeFiles 0
-.PHONY : CMakeFiles/Twrite.dir/rule
-
-# Convenience name for target.
-Twrite: CMakeFiles/Twrite.dir/rule
-
-.PHONY : Twrite
+.PHONY : controlHID
 
 # clean rule for target.
-CMakeFiles/Twrite.dir/clean:
-	$(MAKE) -f CMakeFiles/Twrite.dir/build.make CMakeFiles/Twrite.dir/clean
-.PHONY : CMakeFiles/Twrite.dir/clean
+CMakeFiles/controlHID.dir/clean:
+	$(MAKE) -f CMakeFiles/controlHID.dir/build.make CMakeFiles/controlHID.dir/clean
+.PHONY : CMakeFiles/controlHID.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.
